@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Temperature Converter</title>
+    <link rel="icon" href="favicon.ico">
+    <link href="assets/css/style.css" rel="stylesheet" type="text/css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800;900&display=swap"
+        rel="stylesheet">
+</head>
+
+<body>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: rgba(46, 60, 252, 0.37);
+            color: white;
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            gap: 3rem;
+            height: 100vh;
+        }
+
+        img {
+            position: absolute;
+            width: 100vw;
+            height: 100vh;
+            background-size: cover;
+            object-fit: cover;
+            overflow: hidden;
+            z-index: -1;
+            opacity: 0.06;
+        }
+
+        .main {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            gap: 3rem;
+            height: 80vh;
+            padding: 1rem;
+            /* background-color: yellow; */
+            background: rgba(189, 15, 15, 0.753);
+            box-shadow: 0 8px 32px 0 rgb(24, 24, 24);
+            backdrop-filter: blur(7.5px);
+            -webkit-backdrop-filter: blur(7.5px);
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.18);
+        }
+
+        .heading {
+            width: 100%;
+        }
+
+        .typing-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .input-cursor {
+            display: inline-block;
+            width: 2px;
+            height: 25px;
+            background-color: white;
+            margin-left: 8px;
+            animation: blink .6s linear infinite;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 0.5rem;
+        }
+
+        .converter-box {
+            gap: 2.5rem;
+            display: flex;
+            width: 100%;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .by-dir-way {
+            font-size: 1.5rem;
+        }
+
+        .inputs {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 0.3rem;
+        }
+
+        input {
+            flex: 1 0 150px;
+            padding: 1rem;
+            border: none;
+        }
+
+        select {
+            flex: 1 0 50px;
+            padding: 1rem;
+            color: white;
+            border: none;
+        }
+
+        select:focus {
+            outline: none;
+        }
+
+        select:focus>option {
+            background-color: #323232;
+        }
+
+        #s-unit {
+            background-color: blue;
+        }
+
+        #d-unit {
+            background-color: orangered;
+        }
+
+        #feature-text {
+            color: lime;
+        }
+
+        .footer {
+            font-size: 0.9rem;
+        }
+
+        #error {
+            color: orangered;
+            font-size: 1rem;
+            display: none;
+        }
+
+        @keyframes blink {
+            0% {
+                opacity: 1;
+            }
+
+            40% {
+                opacity: 1;
+            }
+
+            60% {
+                opacity: 0;
+            }
+
+            100% {
+                opacity: 0;
+            }
+        }
+
+        @media(max-width:690px) {
+            .converter-box {
+                flex-direction: column;
+                gap: 2rem;
+            }
+
+            .by-dir-way {
+                transform: rotate(90deg);
+            }
+        }
+    </style>
+    <!-- <div class="card"> -->
+    <div class="main">
+        <div class="heading">
+            <h1 class="header">Temperature Converter</h1>
+            <div class="typing-container">
+                <span id="sentence" class="sentence">Convert it to&nbsp;</span>
+                <span id="feature-text"></span>
+                <span class="input-cursor"></span>
+            </div>
+        </div>
+        <p id="error">Input must contains only NUMBER</p>
+        <div class="converter-box">
+            <div class="source inputs">
+                <input type="text" name="source" id="source" placeholder="Enter temperature" oninput="calc(this.id)">
+                <select id="s-unit" onchange="calc('source')">
+                    <option value="C">&degC</option>
+                    <option value="F">&degF</option>
+                    <option value="K">&degK</option>
+                </select>
+            </div>
+            <span class="by-dir-way">&lrarr;</span>
+            <div class="dest inputs">
+                <input type="text" name="dest" id="dest" placeholder="Genrated temperature" oninput="calc(this.id)">
+                <select id="d-unit" onchange="calc('source')">
+                    <option value="C">&degC</option>
+                    <option value="F">&degF</option>
+                    <option value="K">&degK</option>
+                </select>
+            </div>
+        </div>
+    </div>
+    <!-- </div> -->
+
+    <script>
+        let text = [
+            { value: 'Celsius', color: 'lime' },
+            { value: 'Fahrenheit', color: 'orange' },
+            { value: 'Kelvin', color: 'red' }
+        ];
+
+        window.onload = async function () {
+            textEffect();
+        }
+        async function textEffect() {
+            let i = 0;
+            while (true) {
+                await colorScheme(text[i].color, "#feature-text");
+                await typeSentence(text[i].value, "#feature-text");
+                await waitForMs(1500);
+                await deleteSentence("#feature-text");
+                await waitForMs(500);
+                i++;
+                if (i >= text.length)
+                    i = 0;
+            }
+        }
+        async function colorScheme(color, id) {
+            document.querySelector(id).style.color = color;
+        }
+        async function typeSentence(sen, elId, delay = 100) {
+            const letters = sen.split("");
+            let i = 0;
+            while (i < letters.length) {
+                await waitForMs(delay);
+                document.querySelector(elId).append(letters[i]);
+                i++;
+            }
+            return;
+        }
+        async function deleteSentence(eleRef) {
+            const sentence = document.querySelector(eleRef).innerHTML;
+            const letters = sentence.split("");
+            //console.log(letters);
+            let i = 0;
+            while (letters.length > 0) {
+                await waitForMs(100);
+                letters.pop();
+                document.querySelector(eleRef).innerHTML = letters.join("");
+            }
+        }
+        function waitForMs(ms) {
+            return new Promise(resolve => setTimeout(resolve, ms))
+        }
+        let sUnit = document.getElementById("s-unit").value;
+        let dUnit = document.getElementById("d-unit").value;
+        const src = document.getElementById("source");
+        const dst = document.getElementById("dest");
+        const err = document.getElementById("error");
+
+        function containsOnlyNumbers(str) {
+            return /^\d+$/.test(str);
+        }
+
+        function setSrcDst() {
+            sUnit = document.getElementById("s-unit").value;
+            dUnit = document.getElementById("d-unit").value;
+        }
+        function calc(id) {
+            let In = document.getElementById(id).value;
+            setSrcDst();
+            if (In == "") {
+                dst.value = "";
+                src.value = "";
+                return;
+            }
+            if (!containsOnlyNumbers(In.split(".").join("")) && In != "") {
+                dst.value = "";
+                src.value = "";
+                err.style.display = "block";
+                return;
+            }
+            else {
+                err.style.display = "none";
+                if (id == "source") {
+                    In = parseFloat(convert(parseFloat(In), sUnit, dUnit).toFixed(3));
+                    In == "NaN" ? dst.value = "0" : dst.value = In;
+                }
+                else {
+                    In = parseFloat(convert(parseFloat(In), dUnit, sUnit).toFixed(3));
+                    In == "NaN" ? src.value = "0" : src.value = In;
+                }
+            }
+        }
+        function convert(val, sUnit, dUnit) {
+            //let rs = 0;
+            if (sUnit == "C" && dUnit == "F") {
+                return (val * (9 / 5)) + 32;
+            }
+            else if (sUnit == "C" && dUnit == "K") {
+                return (val + 273.15);
+            }
+            else if (sUnit == "F" && dUnit == "C") {
+                return ((val - 32) * (5 / 9));
+            }
+            else if (sUnit == "F" && dUnit == "K") {
+                return (((val - 32) * (5 / 9)) + 273.15);
+            }
+            else if (sUnit == "K" && dUnit == "C") {
+                return (val - 273.15);
+            }
+            else if (sUnit == "K" && dUnit == "F") {
+                return ((val - 273.15) * (9 / 5) + 32);
+            }
+            else {
+                return val;
+            }
+        }
+    </script>
+</body>
+
+</html>
